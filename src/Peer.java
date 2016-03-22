@@ -33,7 +33,10 @@ public class Peer {
 	public static InetAddress getMCip() {
 		return MCip;
 	}
-
+	
+	public static int getMCport() {
+	    return MCport;
+ }
 
 	public static InetAddress getMCBip() {
 		return MCBip;
