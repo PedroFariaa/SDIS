@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Scanner;
 
-
 public class Peer {
 
 	protected static volatile boolean peerON = true;
@@ -14,7 +13,6 @@ public class Peer {
 	private static int MCRport;
 	public static boolean active;
 
-
 	public static void main(String[] args) throws IOException {
 		MCip = InetAddress.getByName("225.0.0.1");
 		MCport = 9001;
@@ -22,32 +20,23 @@ public class Peer {
 		MCBport = 9002;
 		MCRip = InetAddress.getByName("225.0.0.1");
 		MCRport = 9003;
-        
-        
-        // criar threads de protocolos
-    	BackupProtocol backupProtocol = new BackupProtocol();
-        
-        new BackupThread().start();
-    	
-    	BackupProtocol.run();
-	}
-	
-	public static InetAddress getMCip() {
-		return MCip;
-	}
-	
-	public static int getMCport() {
-	    return MCport;
- }
 
 		// criar threads de protocolos
-		//BackupProtocol backupProtocol = new BackupProtocol();
+		BackupProtocol backupProtocol = new BackupProtocol();
 
-		//new BackupThread().start();
+		new BackupThread().start();
 
-		Scanner sc = new Scanner(System.in);
+		BackupProtocol.run();
 
-		while(Peer.peerON){
+	// criar threads de protocolos
+	// BackupProtocol backupProtocol = new BackupProtocol();
+
+	// new BackupThread().start();
+
+	Scanner sc = new Scanner(System.in);
+
+	while(Peer.peerON)
+	{
 
 		try {
 			String input = sc.nextLine();
@@ -61,33 +50,30 @@ public class Peer {
 				System.exit(0);
 				break;
 			case 1:
-			//	BackupProtocol.run();
+				// BackupProtocol.run();
 				break;
 			case 2:
-			//	RestoreProtocol.run(command);
+				// RestoreProtocol.run(command);
 				break;
 			case 3:
-			//	DeleteProtocol.run(command);
+				// DeleteProtocol.run(command);
 				break;
 			case 4:
-			//	ReclaimProtocol.run();
+				// ReclaimProtocol.run();
 				break;
 			case 5:
-				System.out.println("Valid operations:\n" +
-						"\tBACKUP <filename> <replication factor>\n" +
-						"\tRESTORE <filename>\n" +
-						"\tDELETE <filename>\n" +
-						"\tRECLAIM\n" +
-						"\tEXIT\n");
+				System.out.println("Valid operations:\n" + "\tBACKUP <filename> <replication factor>\n"
+						+ "\tRESTORE <filename>\n" + "\tDELETE <filename>\n" + "\tRECLAIM\n" + "\tEXIT\n");
 				break;
 			default:
 				return;
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
-		}		
 	sc.close();
+	}
+	
 
 }
 
@@ -111,25 +97,24 @@ public static String[] commandValidate(String string) throws Exception {
 	return tokens;
 }
 
-public static InetAddress getMCip() {
-	return MCip;
-}
+	public static InetAddress getMCip() {
+		return MCip;
+	}
+	
+	public static int getMCport() {
+		return MCport;
+	}
 
+	public static InetAddress getMCBip() {
+		return MCBip;
+	}
 
-public static InetAddress getMCBip() {
-	return MCBip;
-}
+	public static InetAddress getMCRip() {
+		return MCRip;
+	}
 
-
-public static InetAddress getMCRip() {
-	return MCRip;
-}
-
-
-public static int getMCBport() {
-	return MCBport;
-}
-
-
+	public static int getMCBport() {
+		return MCBport;
+	}
 
 }
