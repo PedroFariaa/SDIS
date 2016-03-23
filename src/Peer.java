@@ -15,23 +15,18 @@ public class Peer {
 
 	public static void main(String[] args) throws IOException {
 		MCip = InetAddress.getByName("225.0.0.1");
-		MCport = 9001;
+		MCport = 5001;
 		MCBip = InetAddress.getByName("225.0.0.1");
-		MCBport = 9002;
+		MCBport = 5002;
 		MCRip = InetAddress.getByName("225.0.0.1");
-		MCRport = 9003;
+		MCRport = 5003;
 
 		// criar threads de protocolos
-		BackupProtocol backupProtocol = new BackupProtocol();
+		//BackupProtocol backupProtocol = new BackupProtocol();
 
-		new BackupThread().start();
+		//new BackupThread().start();
 
 		BackupProtocol.run();
-
-	// criar threads de protocolos
-	// BackupProtocol backupProtocol = new BackupProtocol();
-
-	// new BackupThread().start();
 
 	Scanner sc = new Scanner(System.in);
 

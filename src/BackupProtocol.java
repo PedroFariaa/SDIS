@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 
 public class BackupProtocol {
 	
@@ -17,7 +16,7 @@ public class BackupProtocol {
             otherSocket.setLoopbackMode(true);
             otherSocket.setSoTimeout(100);
             		
-            FileInputStream fileis;
+            //FileInputStream fileis;
             byte[] buf = new byte[64100];
             DatagramPacket chunkPacket = new DatagramPacket(buf, buf.length, Peer.getMCBip(), Peer.getMCBport());
             DatagramPacket ackPacket = new DatagramPacket(buf, buf.length);

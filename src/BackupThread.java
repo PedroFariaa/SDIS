@@ -4,7 +4,6 @@ import java.nio.charset.StandardCharsets;
 
 public class BackupThread extends Thread{
 	
-	@Override
 	public void run(){
 		MulticastSocket backupSocket, multicastSocket;
 		String received = "";
@@ -20,13 +19,13 @@ public class BackupThread extends Thread{
 	        backupSocket.setLoopbackMode(true);
 	        backupSocket.setSoTimeout(100);
 	        
-	        while(Peer.active){
+	        while(true){
 	        	try{
 	        		byte[] buf = new byte[64100];
 	        		DatagramPacket msg = new DatagramPacket(buf, buf.length);
 	        		backupSocket.receive(msg);
 	        		received = new String(msg.getData(), 0, msg.getLength(), StandardCharsets.ISO_8859_1);
-	        		if (received != null){
+	        		if (received != ""){
 	        			System.out.println("YEYYYYYY !!!!!!");
 	        		}else {
 	        			System.out.println("FUNCIONA FDP !!!!!!!!!");
@@ -45,7 +44,6 @@ public class BackupThread extends Thread{
 	        	} catch(Exception ignore){
 	        		
 	        	}
-	        	backupSocket.leaveGroup(Peer.getMCip());
 	        }
 	        
 		} catch (IOException e) {
