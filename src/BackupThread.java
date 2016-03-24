@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BackupThread extends Thread{
-	
 	public void run(){
 		MulticastSocket backupSocket, multicastSocket;
         DatagramPacket chunkPacket, ackPacket, peerAckPacket;
