@@ -1,9 +1,11 @@
+package Peer;
+
 import java.io.*;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FileHandle {
+public class Util {
 
     public static boolean fileIsValid(String file) {
         return new File(file).exists();

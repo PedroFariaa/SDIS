@@ -1,14 +1,18 @@
+package Peer;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.MulticastSocket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class BackupThread extends Thread{
-	public void run(){
-		MulticastSocket backupSocket, multicastSocket;
+public class BackupThread extends Thread {
+    @Override
+    public void run() {
+        MulticastSocket backupSocket, multicastSocket;
         DatagramPacket chunkPacket, ackPacket, peerAckPacket;
         byte[] buf, ack, peerAck, body;
         String received;
@@ -31,7 +35,7 @@ public class BackupThread extends Thread{
             backupSocket.setSoTimeout(100);
             buf = new byte[64100];
             chunkPacket = new DatagramPacket(buf, buf.length);
-            while (true) try {
+            while (Peer.running) try {
                 backupSocket.receive(chunkPacket);
                 received = new String(chunkPacket.getData(), 0, chunkPacket.getLength(), StandardCharsets.ISO_8859_1);
                 header = received.split("[ ]+");
@@ -43,7 +47,7 @@ public class BackupThread extends Thread{
                 if (header[0].equals("PUTCHUNK")) {
                     ip = new ArrayList<>();
                     saved = 1;
-                    localChunkInfo = FileHandle.loadLocalChunkInfo();
+                    localChunkInfo = Util.loadLocalChunkInfo();
                     if (!(file = new File(header[2] + ".part" + header[3])).isFile()) {
                         file.createNewFile();
                         fos = new FileOutputStream(file);
@@ -59,7 +63,7 @@ public class BackupThread extends Thread{
                         newChunk[4] = "";
                         localChunkInfo.add(newChunk);
                     }
-                    timeout = FileHandle.getRandomInt(400);
+                    timeout = Util.getRandomInt(400);
                     ack = buildHeader(header).getBytes(StandardCharsets.ISO_8859_1);
                     ackPacket = new DatagramPacket(ack, ack.length, Peer.getMCip(), Peer.getMCport());
                     peerAck = new byte[256];
@@ -90,17 +94,17 @@ public class BackupThread extends Thread{
                         if (chunk[0].equals(header[2]) && chunk[1].equals(header[3]))
                             chunk[4] = saved + "";
                     }
-                    FileHandle.saveLocalChunkInfo(localChunkInfo);
+                    Util.saveLocalChunkInfo(localChunkInfo);
                 }
             } catch (Exception ignore) {
             }
-            //backupSocket.leaveGroup(Peer.getMCip());
+            backupSocket.leaveGroup(Peer.getMCip());
         } catch (Exception e) {
             //e.printStackTrace();
         }
-	}
-	
-	String buildHeader(String[] cmd) {
+    }
+
+    String buildHeader(String[] cmd) {
         return "STORED 1.0 " + cmd[2] + " " + Integer.parseInt(cmd[3]) + " \r\n\r\n";
     }
 }
