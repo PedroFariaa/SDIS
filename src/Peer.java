@@ -22,11 +22,7 @@ public class Peer {
 		MCRport = 5003;
 
 		// criar threads de protocolos
-		//BackupProtocol backupProtocol = new BackupProtocol();
-
-		//new BackupThread().start();
-
-		BackupProtocol.run();
+		new BackupThread().start();
 
 	Scanner sc = new Scanner(System.in);
 
@@ -45,7 +41,7 @@ public class Peer {
 				System.exit(0);
 				break;
 			case 1:
-				// BackupProtocol.run();
+				 BackupProtocol.run(command);
 				break;
 			case 2:
 				// RestoreProtocol.run(command);
