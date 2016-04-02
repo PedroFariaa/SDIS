@@ -32,9 +32,9 @@ public class BackupProtocol {
         	System.out.println("args["+ i + "] = " + args[i]);
 
         try {
-            chunkInfo = (chunk ? Util.loadLocalChunkInfo() : Util.loadRemoteChunkInfo());
+            chunkInfo = Util.loadRemoteChunkInfo();
             fileInfo = Util.loadFileInfo();
-            file = new File(chunk ? args[0] + ".part" + args[1] : args[1]);
+            file = new File(args[1]);
 
             multicastSocket = new MulticastSocket();
             multicastSocket.joinGroup(Peer.getMCBip());
@@ -43,19 +43,20 @@ public class BackupProtocol {
             controlSocket.joinGroup(Peer.getMCip());
             controlSocket.setLoopbackMode(true);
             fis = new FileInputStream(file);
-            fileID = (chunk ? args[0] : Util.getFileID(args[1])); 
-            chunkN = (chunk ? Integer.parseInt(args[1]) : 0);
+            fileID = Util.getFileID(args[1]); 
+            chunkN = 0;
             chunkBuf = new byte[64000];
             buf = new byte[100];
             IPlist = new ArrayList<>();
             int k;
             while ((k = fis.read(chunkBuf)) > -1) {
             	
+            	System.out.println("senderID: " + senderID);
             	System.out.println("file ID: " + fileID);
             	System.out.println("chunk N: " + chunkN);
             	
                 msg = Util.concatenateByteArrays(buildHeader(fileID, senderID, chunkN,
-                                (chunk ? args[3] : args[2])).getBytes(StandardCharsets.ISO_8859_1),
+                                args[2]).getBytes(StandardCharsets.ISO_8859_1),
                         Arrays.copyOfRange(chunkBuf, 0, k));
                 chunkPacket = new DatagramPacket(msg, msg.length, Peer.getMCBip(), Peer.getMCBport());
                 ackPacket = new DatagramPacket(buf, buf.length);
