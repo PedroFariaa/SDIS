@@ -8,6 +8,7 @@ import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class BackupProtocol {
     public static void run(String[] args, boolean chunk) {
@@ -22,6 +23,10 @@ public class BackupProtocol {
         String[] temp;
         ArrayList<String> IPlist;
         ArrayList<String[]> chunkInfo, fileInfo;
+        Random generator = new Random(); 
+        int senderID = generator.nextInt(999999) + 1;
+
+
         
         for (int i = 0 ; i < args.length; i++)
         	System.out.println("args["+ i + "] = " + args[i]);
@@ -49,7 +54,7 @@ public class BackupProtocol {
             	System.out.println("file ID: " + fileID);
             	System.out.println("chunk N: " + chunkN);
             	
-                msg = Util.concatenateByteArrays(buildHeader(fileID, chunkN,
+                msg = Util.concatenateByteArrays(buildHeader(fileID, senderID, chunkN,
                                 (chunk ? args[3] : args[2])).getBytes(StandardCharsets.ISO_8859_1),
                         Arrays.copyOfRange(chunkBuf, 0, k));
                 chunkPacket = new DatagramPacket(msg, msg.length, Peer.getMCBip(), Peer.getMCBport());
@@ -70,7 +75,7 @@ public class BackupProtocol {
                             z = new String(ackPacket.getData(), 0, j, StandardCharsets.ISO_8859_1);
                             System.out.println("BackupProtocol  - Received from " + ackPacket.getAddress() + ":" +
                                     ackPacket.getPort() + " | " + z);
-                            if (validateAcknowledge(ackPacket, IPlist, fileID, chunkN)) {
+                            if (validateAcknowledge(ackPacket, IPlist, fileID, senderID, chunkN)) {
                                 saved++;
                             }
                         } catch (SocketTimeoutException ignore) {
@@ -118,11 +123,11 @@ public class BackupProtocol {
         }
     }
 
-    static String buildHeader(String fileID, int chunkN, String factor) {
-        return "PUTCHUNK 1.0 " + fileID + " " + chunkN + " " + factor + " \r\n\r\n";
+    static String buildHeader(String fileID, int senderID, int chunkN, String rep_deg) {
+        return "PUTCHUNK 1.0 " + senderID + " " + fileID + " " + chunkN + " " + rep_deg + " \r\n\r\n";
     }
 
-    static boolean validateAcknowledge(DatagramPacket ack, ArrayList<String> ip, String fileID, int chunk) {
+    static boolean validateAcknowledge(DatagramPacket ack, ArrayList<String> ip, String fileID, int senderID, int chunk) {
         boolean exists = false;
         String s = new String(ack.getData(), 0, ack.getLength(), StandardCharsets.ISO_8859_1);
         String[] msg = s.split("[ ]+");

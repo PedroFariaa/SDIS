@@ -48,7 +48,7 @@ public class BackupThread extends Thread {
                     ip = new ArrayList<>();
                     saved = 1;
                     localChunkInfo = Util.loadLocalChunkInfo();
-                    if (!(file = new File(header[2] + ".part" + header[3])).isFile()) {
+                    if (!(file = new File(header[3] + ".part" + header[4])).isFile()) {
                         file.createNewFile();
                         fos = new FileOutputStream(file);
                         bos = new BufferedOutputStream(fos);
@@ -56,10 +56,10 @@ public class BackupThread extends Thread {
                         bos.flush();
                         bos.close();
                         String[] newChunk = new String[5];
-                        newChunk[0] = header[2];
-                        newChunk[1] = header[3];
+                        newChunk[0] = header[3];
+                        newChunk[1] = header[4];
                         newChunk[2] = body.length + "";
-                        newChunk[3] = header[4];
+                        newChunk[3] = header[5];
                         newChunk[4] = "";
                         localChunkInfo.add(newChunk);
                     }
@@ -91,7 +91,7 @@ public class BackupThread extends Thread {
                             multicastSocket.send(ackPacket);
                     } while (t1 - t0 < 500);
                     for (String[] chunk : localChunkInfo) {
-                        if (chunk[0].equals(header[2]) && chunk[1].equals(header[3]))
+                        if (chunk[0].equals(header[3]) && chunk[1].equals(header[4]))
                             chunk[4] = saved + "";
                     }
                     Util.saveLocalChunkInfo(localChunkInfo);
@@ -105,6 +105,6 @@ public class BackupThread extends Thread {
     }
 
     String buildHeader(String[] cmd) {
-        return "STORED 1.0 " + cmd[2] + " " + Integer.parseInt(cmd[3]) + " \r\n\r\n";
+        return "STORED 1.0 " + Integer.parseInt(cmd[1]) + " " + cmd[2] + " " + Integer.parseInt(cmd[3]) + " \r\n\r\n";
     }
 }
