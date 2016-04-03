@@ -111,10 +111,6 @@ public class BackupThread extends Thread {
 	}
 
 	String buildHeader(String[] cmd) {
-		for(int i= 0 ; i < cmd.length; i++)
-		{
-			System.out.println("cmd["+ i +"]: " + cmd[i]);
-		}
 		return "STORED 1.0 " + Integer.parseInt(cmd[2]) + " " + cmd[3] + " " +Integer.parseInt(cmd[4]) + " \r\n\r\n";
 	}
 }
