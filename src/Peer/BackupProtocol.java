@@ -31,7 +31,7 @@ public class BackupProtocol {
         try {
         	chunkInfo = (chunk ? Util.loadLocalChunkInfo() : Util.loadRemoteChunkInfo());
             fileInfo = Util.loadFileInfo();
-            file = new File(args[1]);
+            file = new File(chunk ? args[0] + ".part" + args[1] : args[1]);
 
             multicastSocket = new MulticastSocket();
             multicastSocket.joinGroup(Peer.getMCBip());
