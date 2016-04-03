@@ -129,7 +129,7 @@ public class BackupProtocol {
         String s = new String(ack.getData(), 0, ack.getLength(), StandardCharsets.ISO_8859_1);
         String[] msg = s.split("[ ]+");
 
-        if (msg[0].trim().equals("STORED") && Integer.parseInt(msg[1]) == senderID && msg[2].trim().equals(fileID) && Integer.parseInt(msg[3]) == chunk) {
+        if (msg[0].trim().equals("STORED") && msg[3].trim().equals(fileID) && Integer.parseInt(msg[4]) == chunk) {
             for (String aIp : ip) {
                 if (aIp.equals(ack.getAddress().toString() + ":" + ack.getPort())) {
                     exists = true;

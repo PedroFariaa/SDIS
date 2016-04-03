@@ -62,7 +62,7 @@ public class BackupThread extends Thread {
 						newChunk[2] = body.length + "";
 						newChunk[3] = header[5];
 						newChunk[4] = "";
-						System.out.print("-------" + newChunk[0] + " " + newChunk[1] + " " + newChunk[2] + " " + newChunk[3] + " " + newChunk[4]);
+						//System.out.print("-------" + newChunk[0] + " " + newChunk[1] + " " + newChunk[2] + " " + newChunk[3] + " " + newChunk[4]);
 						localChunkInfo.add(newChunk);
 					}
 					timeout = Util.getRandomInt(400);
@@ -93,7 +93,7 @@ public class BackupThread extends Thread {
 							multicastSocket.send(ackPacket);
 					} while (t1 - t0 < 500);
 					for (String[] chunk : localChunkInfo) {
-						System.out.print("*****" + chunk[0] + " " + header[2] + " " + chunk[1] + " " + header[3]);
+						//System.out.print("*****" + chunk[0] + " " + header[2] + " " + chunk[1] + " " + header[3]);
 						if (chunk[0].equals(header[2]) && chunk[1].equals(header[3]))
 							chunk[3] = saved + "";
 					}
