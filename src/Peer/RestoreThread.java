@@ -81,7 +81,7 @@ public class RestoreThread extends Thread {
 
 
     String buildHeader(String fileID, int chunkN) {
-        return "CHUNK 1.0 " + fileID + " " + chunkN + " \r\n\r\n";
+        return "CHUNK 1.0 " + Peer.senderID + " " + fileID + " " + chunkN + " \r\n\r\n";
     }
 
     boolean validRequest(String[] msg) {

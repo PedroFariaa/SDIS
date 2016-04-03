@@ -51,7 +51,7 @@ public class DeleteProtocol {
         }
     }
 
-    static String buildHeader(String[] cmd) {
-        return "DELETE 1.0 " + cmd[1] + " \r\n\r\n";
+    public static String buildHeader(String[] cmd) {
+        return "DELETE 1.0 " + Peer.senderID + " " + cmd[1] + " \r\n\r\n";
     }
 }

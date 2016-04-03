@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 public class Peer {
 	protected static volatile boolean running = true;
@@ -14,6 +15,8 @@ public class Peer {
 	private static int MCBport;
 	private static InetAddress MCRip;
 	private static int MCRport;
+	public static int senderID;
+	
 
 	public static InetAddress getMCip() {
 		return MCip;
@@ -41,6 +44,9 @@ public class Peer {
 
 	public static void main(String[] args) throws IOException {
 
+		Random r = new Random();
+	    senderID = r.nextInt(999999) + 1;
+	    
 		if (args.length == 0) {
 			MCip = InetAddress.getByName("225.0.0.1");
 			MCport = 9001;
@@ -127,5 +133,6 @@ public class Peer {
 
 		return tokens;
 	}
+
 }
 

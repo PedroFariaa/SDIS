@@ -54,6 +54,6 @@ public class ReclaimProtocol {
     }
 
     static String buildHeader(String[] cmd) {
-        return "REMOVED 1.0 " + cmd[0] + " " + cmd[1] + " \r\n\r\n";
+        return "REMOVED 1.0 " + Peer.senderID + " " + cmd[0] + " " + cmd[1] + " \r\n\r\n";
     }
 }

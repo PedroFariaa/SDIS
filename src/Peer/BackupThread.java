@@ -95,6 +95,9 @@ public class BackupThread extends Thread {
                             chunk[4] = saved + "";
                     }
                     Util.saveLocalChunkInfo(localChunkInfo);
+                    
+                    Util.setSenderID(header[1]);
+                    
                 }
             } catch (Exception ignore) {
             }

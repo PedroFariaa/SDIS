@@ -7,6 +7,8 @@ import java.util.Random;
 
 public class Util {
 
+	public static int senderID = 0;
+	
     public static boolean fileIsValid(String file) {
         return new File(file).exists();
     }
@@ -167,5 +169,9 @@ public class Util {
         }
         return filtered;
     }
+
+	public static void setSenderID(String string) {
+		senderID = Integer.parseInt(string);
+	}
 
 }
