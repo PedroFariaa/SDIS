@@ -46,6 +46,7 @@ public class ReclaimProtocol {
             }
             Util.saveLocalChunkInfo(localChunkInfo);
             multicastSocket.close();
+            
             System.out.println("ReclaimProtocol - Reclaimed " + savings + "B");
             System.out.println("ReclaimProtocol - Finished");
         } catch (Exception e) {
