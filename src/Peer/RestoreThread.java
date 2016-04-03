@@ -45,12 +45,12 @@ public class RestoreThread extends Thread {
                     System.out.println("RestoreThread   - Received from " + requestPacket.getAddress() + ":" +
                             requestPacket.getPort() + " | " + s);
                     answered = false;
-                    time = Util.getRandomInt(400);
+                    time = FileHandle.getRandomInt(400);
                     t0 = System.currentTimeMillis();
                     file = new File(token[2] + ".part" + token[3]);
                     fis = new FileInputStream(file);
                     k = fis.read(chunkBuf);
-                    msg = Util.concatenateByteArrays(buildHeader(token[2], Integer.parseInt(token[3])).getBytes(StandardCharsets.ISO_8859_1), Arrays.copyOfRange(chunkBuf, 0, k));
+                    msg = FileHandle.concatenateByteArrays(buildHeader(token[2], Integer.parseInt(token[3])).getBytes(StandardCharsets.ISO_8859_1), Arrays.copyOfRange(chunkBuf, 0, k));
                     chunkPacket = new DatagramPacket(msg, msg.length, Peer.getMCRip(), Peer.getMCRport());
                     do {
                         try {
@@ -86,7 +86,7 @@ public class RestoreThread extends Thread {
 
     boolean validRequest(String[] msg) {
         if (msg[0].trim().equals("GETCHUNK")) {
-            File file = new File(msg[2].trim() + ".part" + msg[3].trim());
+            File file = new File(msg[3].trim() + ".part" + msg[4].trim());
             if (file.isFile())
                 return true;
         }
@@ -97,7 +97,7 @@ public class RestoreThread extends Thread {
         String s = new String(peer.getData(), 0, peer.getLength(), StandardCharsets.ISO_8859_1);
         String[] peerToken = s.split("[ ]");
         return peerToken[0].trim().equals("CHUNK")
-                && peerToken[2].trim().equals(requestToken[2].trim())
-                && peerToken[3].trim().equals(requestToken[3].trim());
+                && peerToken[3].trim().equals(requestToken[2].trim())
+                && peerToken[4].trim().equals(requestToken[3].trim());
     }
 }

@@ -33,10 +33,10 @@ public class DeleteThread extends Thread {
                 if (msg[0].equals("DELETE")) {
                     System.out.println("DeleteThread  - Received from " + dataPacket.getAddress() + ":" +
                             dataPacket.getPort() + " | " + received);
-                    localChunkInfo = Util.loadLocalChunkInfo();
+                    localChunkInfo = FileHandle.loadLocalChunkInfo();
                     filter = new ArrayList<>();
                     for (String[] chunk : localChunkInfo) {
-                        if (chunk[0].equals(msg[2]))
+                        if (chunk[0].equals(msg[3]))
                             filter.add(chunk);
                     }
                     for (String[] chunk : filter) {
@@ -44,16 +44,16 @@ public class DeleteThread extends Thread {
                         new File(chunk[0] + ".part" + chunk[1]).delete();
                         localChunkInfo.remove(chunk);
                     }
-                    Util.saveLocalChunkInfo(localChunkInfo);
+                    FileHandle.saveLocalChunkInfo(localChunkInfo);
                 } else if (msg[0].equals("REMOVED")) {
                     System.out.println("DeleteThread  - Received from " + dataPacket.getAddress() + ":" +
                             dataPacket.getPort() + " | " + received);
-                    localChunkInfo = Util.loadLocalChunkInfo();
-                    remoteChunkInfo = Util.loadRemoteChunkInfo();
+                    localChunkInfo = FileHandle.loadLocalChunkInfo();
+                    remoteChunkInfo = FileHandle.loadRemoteChunkInfo();
                     for (String[] chunk : localChunkInfo) {
-                        if (chunk[0].equals(msg[2]) && chunk[1].equals(msg[3])) {
+                        if (chunk[0].equals(msg[3]) && chunk[1].equals(msg[4])) {
                             chunk[4] = (Integer.parseInt(chunk[4]) - 1) + "";
-                            Util.saveLocalChunkInfo(localChunkInfo);
+                            FileHandle.saveLocalChunkInfo(localChunkInfo);
                             if (Integer.parseInt(chunk[4]) < Integer.parseInt(chunk[3])) {
                                 BackupProtocol.run(chunk, true);
                             }
@@ -61,9 +61,9 @@ public class DeleteThread extends Thread {
                         }
                     }
                     for (String[] chunk : remoteChunkInfo) {
-                        if (chunk[0].equals(msg[2]) && chunk[1].equals(msg[3])) {
+                        if (chunk[0].equals(msg[3]) && chunk[1].equals(msg[4])) {
                             chunk[4] = (Integer.parseInt(chunk[4]) - 1) + "";
-                            Util.saveRemoteChunkInfo(remoteChunkInfo);
+                            FileHandle.saveRemoteChunkInfo(remoteChunkInfo);
                             break;
                         }
                     }

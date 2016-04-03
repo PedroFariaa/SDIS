@@ -25,10 +25,10 @@ public class RestoreProtocol {
         ArrayList<String[]> remoteChunkInfo, fileInfo, filter;
 
         try {
-            remoteChunkInfo = Util.loadRemoteChunkInfo();
-            fileInfo = Util.loadFileInfo();
+            remoteChunkInfo = FileHandle.loadRemoteChunkInfo();
+            fileInfo = FileHandle.loadFileInfo();
             file = new File(args[1]);
-            if (!Util.fileExists(fileInfo, file)) {
+            if (!FileHandle.fileExists(fileInfo, file)) {
                 System.out.println("RestoreProtocol - File was not backed up");
                 return;
             }
@@ -51,8 +51,8 @@ public class RestoreProtocol {
             multicastSocket.setLoopbackMode(true);
             multicastSocket.setSoTimeout(100);
             chunkBuf = new byte[64100];
-            fileID = Util.filterFiles(fileInfo, file.getName())[1];
-            filter = Util.filterChunks(remoteChunkInfo, fileID);
+            fileID = FileHandle.filterFiles(fileInfo, file.getName())[1];
+            filter = FileHandle.filterChunks(remoteChunkInfo, fileID);
             peerPacket = new DatagramPacket(chunkBuf, chunkBuf.length);
             fail = false;
             for (String[] chunk : filter) {
@@ -115,7 +115,7 @@ public class RestoreProtocol {
         s = new String(peerPacket.getData(), 0, i, StandardCharsets.ISO_8859_1);
         String[] msg = s.split("[ ]+");
 
-        return (msg[0].trim().equals("CHUNK") && msg[2].trim().equals(chunk[0]) && msg[3].trim().equals(chunk[1]));
+        return (msg[0].trim().equals("CHUNK") && msg[3].trim().equals(chunk[0]) && msg[4].trim().equals(chunk[1]));
     }
 
 }

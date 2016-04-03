@@ -17,10 +17,10 @@ public class DeleteProtocol {
         ArrayList<String[]> fileInfo, chunkInfo, filter;
 
         try {
-            chunkInfo = Util.loadRemoteChunkInfo();
-            fileInfo = Util.loadFileInfo();
+            chunkInfo = FileHandle.loadRemoteChunkInfo();
+            fileInfo = FileHandle.loadFileInfo();
             file = new File(args[1]);
-            if (!Util.fileExists(fileInfo, file)) {
+            if (!FileHandle.fileExists(fileInfo, file)) {
                 System.out.println("DeleteProtocol  - File was not backed up");
                 return;
             }
@@ -28,22 +28,22 @@ public class DeleteProtocol {
             multicastSocket.joinGroup(Peer.getMCip());
             multicastSocket.setLoopbackMode(true);
             multicastSocket.setSoTimeout(100);
-            fileFilter = Util.filterFiles(fileInfo, file.getName());
-            filter = Util.filterChunks(chunkInfo, fileFilter[1]);
+            fileFilter = FileHandle.filterFiles(fileInfo, file.getName());
+            filter = FileHandle.filterChunks(chunkInfo, fileFilter[1]);
             buf = buildHeader(fileFilter).getBytes(StandardCharsets.ISO_8859_1);
             controlPacket = new DatagramPacket(buf, buf.length, Peer.getMCip(), Peer.getMCport());
             sent = 0;
             while (sent < 5) {
                 multicastSocket.send(controlPacket);
                 sent++;
-                Util.wait(1000);
+                FileHandle.wait(1000);
             }
             for (String[] chunk : filter) {
                 chunkInfo.remove(chunk);
             }
             fileInfo.remove(fileFilter);
-            Util.saveFileInfo(fileInfo);
-            Util.saveRemoteChunkInfo(chunkInfo);
+            FileHandle.saveFileInfo(fileInfo);
+            FileHandle.saveRemoteChunkInfo(chunkInfo);
             multicastSocket.close();
             System.out.println("DeleteProtocol  - Finished");
         } catch (Exception e) {

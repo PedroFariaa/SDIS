@@ -48,7 +48,7 @@ public class BackupThread extends Thread {
 					ip = new ArrayList<>();
 					saved = 1;
 					System.out.println(header[0] + " " + header[1] +  " " + header[2] +   " " + header[3] + " " + header[4]);
-					localChunkInfo = Util.loadLocalChunkInfo();
+					localChunkInfo = FileHandle.loadLocalChunkInfo();
 					if (!(file = new File(header[3] + ".part" + header[4])).isFile()) {
 						file.createNewFile();
 						fos = new FileOutputStream(file);
@@ -65,7 +65,7 @@ public class BackupThread extends Thread {
 						//System.out.print("-------" + newChunk[0] + " " + newChunk[1] + " " + newChunk[2] + " " + newChunk[3] + " " + newChunk[4]);
 						localChunkInfo.add(newChunk);
 					}
-					timeout = Util.getRandomInt(400);
+					timeout = FileHandle.getRandomInt(400);
 					ack = buildHeader(header).getBytes(StandardCharsets.ISO_8859_1);
 					ackPacket = new DatagramPacket(ack, ack.length, Peer.getMCip(), Peer.getMCport());
 					peerAck = new byte[256];
@@ -97,9 +97,9 @@ public class BackupThread extends Thread {
 						if (chunk[0].equals(header[2]) && chunk[1].equals(header[3]))
 							chunk[3] = saved + "";
 					}
-					Util.saveLocalChunkInfo(localChunkInfo);
+					FileHandle.saveLocalChunkInfo(localChunkInfo);
 
-					Util.setSenderID(header[2]);
+					FileHandle.setSenderID(header[2]);
 
 				}
 			} catch (Exception ignore) {

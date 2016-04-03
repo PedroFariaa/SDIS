@@ -6,7 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
-import Peer.Util;
+import Peer.FileHandle;
 
 
 public class TestApp {
@@ -46,8 +46,8 @@ public class TestApp {
 	                    default:
 	                    	msg =  command[0].getBytes(StandardCharsets.ISO_8859_1);
 	                    	for(int i = 1 ; i < command.length ; i++){
-	                    		msg = Util.concatenateByteArrays(msg, new String(" ").getBytes(StandardCharsets.ISO_8859_1));
-	                    		msg = Util.concatenateByteArrays(msg, command[i].getBytes(StandardCharsets.ISO_8859_1));                   		
+	                    		msg = FileHandle.concatenateByteArrays(msg, new String(" ").getBytes(StandardCharsets.ISO_8859_1));
+	                    		msg = FileHandle.concatenateByteArrays(msg, command[i].getBytes(StandardCharsets.ISO_8859_1));                   		
 	                    	}
 	                    	cmdPacket = new DatagramPacket(msg, msg.length, InetAddress.getByName("localhost"), 9999);
 	                    	
@@ -76,7 +76,7 @@ public static String[] validateCmd(String s) throws Exception {
 	String[] tokens = s.split("[ ]+");
 	if (tokens[0].equals("exit")) {
 		tokens[0] = "0";
-	} else if (tokens[0].equalsIgnoreCase("BACKUP") && tokens.length == 3 && Util.fileIsValid(tokens[1])
+	} else if (tokens[0].equalsIgnoreCase("BACKUP") && tokens.length == 3 && FileHandle.fileIsValid(tokens[1])
 			&& Integer.parseInt(tokens[2]) > 0 && Integer.parseInt(tokens[2]) < 10) {
 		tokens[0] = "1";
 	} else if (tokens[0].equalsIgnoreCase("RESTORE") && tokens.length == 2) {

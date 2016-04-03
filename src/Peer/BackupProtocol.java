@@ -29,8 +29,8 @@ public class BackupProtocol {
         	System.out.println("args["+ i + "] = " + args[i]);
 
         try {
-        	chunkInfo = (chunk ? Util.loadLocalChunkInfo() : Util.loadRemoteChunkInfo());
-            fileInfo = Util.loadFileInfo();
+        	chunkInfo = (chunk ? FileHandle.loadLocalChunkInfo() : FileHandle.loadRemoteChunkInfo());
+            fileInfo = FileHandle.loadFileInfo();
             file = new File(chunk ? args[0] + ".part" + args[1] : args[1]);
 
             multicastSocket = new MulticastSocket();
@@ -40,7 +40,7 @@ public class BackupProtocol {
             controlSocket.joinGroup(Peer.getMCip());
             controlSocket.setLoopbackMode(true);
             fis = new FileInputStream(file);
-            fileID = (chunk ? args[0] : Util.getFileID(args[1])); 
+            fileID = (chunk ? args[0] : FileHandle.getFileID(args[1])); 
             chunkN = (chunk ? Integer.parseInt(args[1]) : 0);
             chunkBuf = new byte[64000];
             buf = new byte[100];
@@ -52,7 +52,7 @@ public class BackupProtocol {
             	System.out.println("file ID: " + fileID);
             	System.out.println("chunk N: " + chunkN);
             	
-            	msg = Util.concatenateByteArrays(buildHeader(fileID, Peer.senderID, chunkN,(chunk ? args[3] : args[2])).getBytes(StandardCharsets.ISO_8859_1),
+            	msg = FileHandle.concatenateByteArrays(buildHeader(fileID, Peer.senderID, chunkN,(chunk ? args[3] : args[2])).getBytes(StandardCharsets.ISO_8859_1),
                         Arrays.copyOfRange(chunkBuf, 0, k));
                 chunkPacket = new DatagramPacket(msg, msg.length, Peer.getMCBip(), Peer.getMCBport());
                 ackPacket = new DatagramPacket(buf, buf.length);
@@ -109,10 +109,10 @@ public class BackupProtocol {
             controlSocket.close();
             fis.close();
             if (chunk) {
-                Util.saveLocalChunkInfo(chunkInfo);
+                FileHandle.saveLocalChunkInfo(chunkInfo);
             } else {
-                Util.saveRemoteChunkInfo(chunkInfo);
-                Util.saveFileInfo(fileInfo);
+                FileHandle.saveRemoteChunkInfo(chunkInfo);
+                FileHandle.saveFileInfo(fileInfo);
             }
             System.out.println("BackupProtocol  - Finished");
         } catch (Exception ignore) {

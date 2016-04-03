@@ -117,7 +117,7 @@ public class Peer {
 				DeleteProtocol.run(cmdToken);
 				break;
 			case 4:
-				ReclaimProtocol.run();
+				//ReclaimProtocol.run();
 				break;
 			default:
 				return;
